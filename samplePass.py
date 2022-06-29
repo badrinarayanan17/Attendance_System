@@ -1,8 +1,8 @@
 from getpass import getpass
 
-count = 3
-while count > 0:
-    count = count -1
+count_num = 3
+while count_num > 0:
+    count = count_num -1
     username = input('Enter Username : ')
     password = getpass('Enter Password: ')
 
@@ -10,4 +10,4 @@ while count > 0:
      print('Login Successful')
     else:
      print('Login failed')
-     print('You have %d valid attempts now '%(count))
+     print('You have %d valid attempts now '%(count_num))
