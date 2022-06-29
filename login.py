@@ -51,14 +51,14 @@ def signin():
         img3 = PhotoImage(file='C:\\Users\\User\\OneDrive\\Desktop\\Mini-Project\\Detectimg.png')
         Label(frame, image=img3, bg='#E5C2C0').place(x=0, y=160)
 
-        def start():
+        def startfunc():
             cmd = 'python main.py'
             p = subprocess.Popen(cmd, shell=True)
             Out, err = p.communicate()
             print(err)
             print(Out)
 
-        Button(screen, width=39, pady=7, text='Start Recording Attendance', bg='black', fg='white', border=0,command=start).place(x=420,
+        Button(screen, width=39, pady=7, text='Start Recording Attendance', bg='black', fg='white', border=0,command=startfunc).place(x=420,
                                                                                                                  y=630)
         screen.mainloop()
     elif username != 'admin' and password3 != 'admin':
