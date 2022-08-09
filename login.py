@@ -34,7 +34,7 @@ def signin():
         screen.geometry('1280x800')
         screen.configure(bg="white")
         img2 = PhotoImage(file='C:\\Users\\User\\Downloads\\instruction.png')
-        Label(screen, image=img2, bg='white').place(x=0, y=130)
+        Label(screen, image=img2, bg="white").place(x=0, y=130)
         heading2 = Label(screen, text='WELCOME TO AUTOMATIC ATTENDANCE REGISTRATION SYSTEM', fg='black',bg='white',
                          font=('Candara', 22,'bold'))
         heading2.place(x=243, y=50)
@@ -57,6 +57,8 @@ def signin():
             Out, err = p.communicate()
             print(err)
             print(Out)
+
+
 
         Button(screen, width=39, pady=7, text='Start Recording Attendance', bg='black', fg='white', border=0,command=startfunc).place(x=420,
                                                                                                                  y=630)

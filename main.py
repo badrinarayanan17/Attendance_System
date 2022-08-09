@@ -1,8 +1,12 @@
+
 import numpy as np
 import cv2
 import os
 import face_recognition
 import pyttsx3
+import pyodbc
+import datetime
+from datetime import datetime as date
 from getpass import getpass
 
 
@@ -13,6 +17,7 @@ images = []
 classNames = []
 mylist = os.listdir(path)
 print(mylist)
+
 
 for cl in mylist:
     curImg = cv2.imread(f'{path}/{cl}') #Reading each image and appending to imageslist
@@ -31,7 +36,16 @@ def findEncodings(images): #Method defined to encode images
 encodeListKnown = findEncodings(images)
 print('Encoded Successfully') #Printing the length of images
 
-cap = cv2.VideoCapture(1)
+def markAttendance(rollno,InTime,InDate,day):
+    conn = pyodbc.connect('DRIVER=ODBC Driver 17 for SQL Server;Server=USER-PC;Database=attendance_db;Trusted_Connection=Yes;')
+    cursor = conn.cursor()
+    sql = '''insert into attendance_db.dbo.mark_attendance(rollno,InTime,InDate,day) values(?,?,?,?)'''
+    val = (rollno,InTime,InDate,day)
+    cursor.execute(sql,val)
+    conn.commit()
+    
+cap = cv2.VideoCapture(0)
+
 
 while True:
     success,img = cap.read()
@@ -50,17 +64,23 @@ while True:
 
 
      if matches[matchIndex]:
-        name = classNames[matchIndex].upper()
-        print(name)
+        rollno = classNames[matchIndex].upper()
+        print(rollno)
 
         y1,x2,y2,x1 = faceLoc
         y1, x2, y2, x1 = y1*4,x2*4,y2*4,x1*4
         cv2.rectangle(img,(x1,y1),(x2,y2),(0,255,0),3)
         cv2.rectangle(img,(x1,y2-35),(x2,y2),(0,255,0),cv2.FILLED)
-        cv2.putText(img,name,(x1+6,y2-6),cv2.FONT_HERSHEY_SIMPLEX,1,(255,255,255),2)
+        cv2.putText(img,rollno,(x1+6,y2-6),cv2.FONT_HERSHEY_SIMPLEX,1,(255,255,255),2)
+        crctTime = datetime.datetime.now().time()
+        crctDate = datetime.datetime.now().date()
+        crctDay = date.today().strftime("%A")
+        markAttendance(rollno,str(crctTime),str(crctDate),crctDay)
+        '''if name != unMatch:
+            markAttendance(name, str(crctTime), str(crctDate))
+            name = unMatch'''
 
-
-    cv2.imshow('webcam', img)
+    cv2.imshow('Attendance Recording', img)
     cv2.waitKey(1)
 
 
