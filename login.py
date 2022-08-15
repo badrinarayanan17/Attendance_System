@@ -2,6 +2,9 @@ from tkinter import *
 from tkinter import messagebox as mb
 import pyttsx3
 import subprocess
+import datetime
+import pyodbc
+from datetime import datetime as date
 
 
 
@@ -51,6 +54,8 @@ def signin():
         img3 = PhotoImage(file='C:\\Users\\User\\OneDrive\\Desktop\\Mini-Project\\Detectimg.png')
         Label(frame, image=img3, bg='#E5C2C0').place(x=0, y=160)
 
+        crctDate = datetime.datetime.now().date()
+
         def startfunc():
             cmd = 'python main.py'
             p = subprocess.Popen(cmd, shell=True)
@@ -59,6 +64,31 @@ def signin():
             print(Out)
 
 
+
+        def showattendance():
+
+            conn = pyodbc.connect(
+                'DRIVER=ODBC Driver 17 for SQL Server;Server=USER-PC;Database=attendance_db;Trusted_Connection=Yes;')
+            cursor = conn.cursor()
+
+            '''
+            sql = 
+            select dbo.mark_attendance.rollno ,dbo.personal_details.stud_name,dbo.personal_details.department,dbo.personal_details.stud_year,dbo.mark_attendance.InDate,dbo.mark_attendance.InTime,dbo.mark_attendance.current_day
+            from dbo.personal_details as PD full outer join dbo.mark_attendance as MA
+            on PD.rollno = MA.rollno
+            '''
+
+            cursor.execute("select * from view1")
+
+            for row in cursor.fetchall():
+                print(row)
+
+            print("Data Printed successfully")
+            conn.commit()
+
+        Button(screen, width=39, pady=7, text='Show Registry', bg='black', fg='white', border=0,
+                   command=showattendance).place(x=100,
+                                            y=630)
 
         Button(screen, width=39, pady=7, text='Start Recording Attendance', bg='black', fg='white', border=0,command=startfunc).place(x=420,
                                                                                                                  y=630)

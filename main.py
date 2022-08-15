@@ -36,15 +36,15 @@ def findEncodings(images): #Method defined to encode images
 encodeListKnown = findEncodings(images)
 print('Encoded Successfully') #Printing the length of images
 
-def markAttendance(rollno,InTime,InDate,day):
+def markAttendance(rollno,day,InTime,InDate):
     conn = pyodbc.connect('DRIVER=ODBC Driver 17 for SQL Server;Server=USER-PC;Database=attendance_db;Trusted_Connection=Yes;')
     cursor = conn.cursor()
-    sql = '''insert into attendance_db.dbo.mark_attendance(rollno,InTime,InDate,day) values(?,?,?,?)'''
-    val = (rollno,InTime,InDate,day)
+    sql = '''insert into attendance_db.dbo.mark_attendance(rollno,current_day,InTime,InDate) values(?,?,?,?)'''
+    val = (rollno,day,InTime,InDate)
     cursor.execute(sql,val)
     conn.commit()
     
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 
 while True:
@@ -75,7 +75,7 @@ while True:
         crctTime = datetime.datetime.now().time()
         crctDate = datetime.datetime.now().date()
         crctDay = date.today().strftime("%A")
-        markAttendance(rollno,str(crctTime),str(crctDate),crctDay)
+        markAttendance(rollno,str(crctDay),str(crctTime),crctDate)
         '''if name != unMatch:
             markAttendance(name, str(crctTime), str(crctDate))
             name = unMatch'''
