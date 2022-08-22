@@ -44,7 +44,7 @@ def markAttendance(rollno,day,InTime,InDate):
     cursor.execute(sql,val)
     conn.commit()
     
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 
 while True:

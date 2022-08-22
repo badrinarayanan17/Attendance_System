@@ -63,6 +63,12 @@ def signin():
             print(err)
             print(Out)
 
+        def regfunc():
+            cmd = 'python Registration.py'
+            p = subprocess.Popen(cmd, shell=True)
+            Out, err = p.communicate()
+            print(err)
+            print(Out)
 
 
         def showattendance():
@@ -70,13 +76,26 @@ def signin():
             conn = pyodbc.connect(
                 'DRIVER=ODBC Driver 17 for SQL Server;Server=USER-PC;Database=attendance_db;Trusted_Connection=Yes;')
             cursor = conn.cursor()
+            root2 = Tk()
+            root2.geometry("400x250")
+            cursor.execute("SELECT * FROM view1")
+            i = 0
+            for student in cursor:
+                for j in range(len(student)):
+                    e = Entry(root2, width=10, fg='blue')
+                    e.grid(row=i, column=j)
+                    e.insert(END, student[j])
+                i = i + 1
+                e = Label(root2, width=10, text=student[j],
+                          borderwidth=2, relief='ridge', anchor="w")
+            root2.mainloop()
 
             '''
             sql = 
             select dbo.mark_attendance.rollno ,dbo.personal_details.stud_name,dbo.personal_details.department,dbo.personal_details.stud_year,dbo.mark_attendance.InDate,dbo.mark_attendance.InTime,dbo.mark_attendance.current_day
             from dbo.personal_details as PD full outer join dbo.mark_attendance as MA
             on PD.rollno = MA.rollno
-            '''
+            
 
             cursor.execute("select * from view1")
 
@@ -84,14 +103,34 @@ def signin():
                 print(row)
 
             print("Data Printed successfully")
+            '''
             conn.commit()
 
-        Button(screen, width=39, pady=7, text='Show Registry', bg='black', fg='white', border=0,
+        def exitfunc():
+
+            exit()
+
+        Button(screen, width=39, pady=7, text='Register Student Details', bg='black', fg='white', border=0, command=regfunc).place(x=900,
+                                                                                                                y=630)
+
+        Button(screen, width=39, pady=7, text='Exit', bg='black', fg='white', border=0, command=exitfunc).place(x=900,
+                             y=690)
+
+        Button(screen, width=39, pady=7, text='Show Intime Registry', bg='black', fg='white', border=0,
                    command=showattendance).place(x=100,
                                             y=630)
 
-        Button(screen, width=39, pady=7, text='Start Recording Attendance', bg='black', fg='white', border=0,command=startfunc).place(x=420,
+        Button(screen, width=39, pady=7, text='Start Intime Attendance', bg='black', fg='white', border=0,command=startfunc).place(x=470,
                                                                                                                  y=630)
+
+
+        Button(screen, width=39, pady=7, text='Show Outtime Registry', bg='black', fg='white', border=0,
+               ).place(x=100,
+                                             y=690)
+
+        Button(screen, width=39, pady=7, text='Start Outtime Attendance', bg='black', fg='white', border=0,
+               ).place(x=470,
+                                        y=690)
         screen.mainloop()
     elif username != 'admin' and password3 != 'admin':
         welcome_voice = pyttsx3.init()
