@@ -62,6 +62,12 @@ def signin():
             Out, err = p.communicate()
             print(err)
             print(Out)
+        def outfunc():
+            cmd = 'python main2.py'
+            p = subprocess.Popen(cmd, shell=True)
+            Out, err = p.communicate()
+            print(err)
+            print(Out)
 
         def regfunc():
             cmd = 'python Registration.py'
@@ -128,7 +134,7 @@ def signin():
                ).place(x=100,
                                              y=690)
 
-        Button(screen, width=39, pady=7, text='Start Outtime Attendance', bg='black', fg='white', border=0,
+        Button(screen, width=39, pady=7, text='Start Outtime Attendance', bg='black', fg='white', border=0,command=outfunc,
                ).place(x=470,
                                         y=690)
         screen.mainloop()

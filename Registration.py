@@ -1,5 +1,7 @@
 from tkinter import *
 from PIL import ImageTk, Image
+import pyodbc
+import tkinter.messagebox as mb
 
 
 class LoginPage:
@@ -74,12 +76,12 @@ class LoginPage:
         self.name_line.place(x=100, y=359)
         # =============================department=======================================
         self.dep_label = Label(self.lgn_frame, text="Department", bg="#040405", fg="white",
-                               font=("yu gothic ui", 13, "bold"))
+                                  font=("yu gothic ui", 13, "bold"))
         self.dep_label.place(x=95, y=380)
 
         self.dep_entry = Entry(self.lgn_frame, highlightthickness=0, relief=FLAT, bg="#040405", fg="#6b6a69",
-                               font=("yu gothic ui ", 12, "bold"))
-        self.dep_entry.place(x=130, y=335, width=270)
+                                  font=("yu gothic ui ", 12, "bold"))
+        self.dep_entry.place(x=130, y=420, width=270)
 
         self.dep_line = Canvas(self.lgn_frame, width=300, height=2.0, bg="#bdb9b1", highlightthickness=0)
         self.dep_line.place(x=100, y=440)
@@ -118,17 +120,43 @@ class LoginPage:
         # ========================================================================
         # ============================login button================================
         # ========================================================================
+
+        # ========================================================================
+        # ============================Forgot password=============================
+        # ========================================================================
+
+
+        def store(roll, student, dep, stud_year):
+
+                conn = pyodbc.connect(
+                    'DRIVER=ODBC Driver 17 for SQL Server;Server=USER-PC;Database=attendance_db;Trusted_Connection=Yes;')
+                cursor = conn.cursor()
+                sql = '''insert into attendance_db.dbo.personal_details(rollno,stud_name,department,stud_year) values(?,?,?,?)'''
+                val = (roll, student, dep, stud_year)
+                cursor.execute(sql, val)
+                conn.commit()
+
+        def condition():
+            student_name = self.name_entry.get()
+            rollno = self.rollno_entry.get()
+            department = self.dep_entry.get()
+            year = self.year_entry.get()
+
+            if student_name != "" or rollno != "" or department != "" or year != "":
+                store(rollno,student_name,department,year)
+            else:
+                mb.showinfo('Information', "Please enter all the details")
+
+
         self.lgn_button = Image.open('Reg_Images\\btn1.png')
         photo = ImageTk.PhotoImage(self.lgn_button)
         self.lgn_button_label = Label(self.lgn_frame, image=photo, bg='#040405')
         self.lgn_button_label.image = photo
         self.lgn_button_label.place(x=340, y=465)
         self.login = Button(self.lgn_button_label, text='SUBMIT', font=("yu gothic ui", 13, "bold"), width=25, bd=0,
-                            bg='#3047ff', cursor='hand2', activebackground='#3047ff', fg='white')
+                            bg='#3047ff', cursor='hand2', activebackground='#3047ff', fg='white', command=condition)
         self.login.place(x=20, y=10)
-        # ========================================================================
-        # ============================Forgot password=============================
-        # ========================================================================
+
         '''
         self.forgot_button = Button(self.lgn_frame, text="Forgot Password ?",
                                     font=("yu gothic ui", 13, "bold underline"), fg="white", relief=FLAT,
@@ -183,6 +211,7 @@ class LoginPage:
         self.show_button.place(x=860, y=420)
         self.password_entry.config(show='*')
     '''
+
 
 
 def page():
