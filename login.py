@@ -83,7 +83,7 @@ def signin():
                 'DRIVER=ODBC Driver 17 for SQL Server;Server=USER-PC;Database=attendance_db;Trusted_Connection=Yes;')
             cursor = conn.cursor()
             root2 = Tk()
-            root2.geometry("400x250")
+            root2.geometry("1280x800")
             cursor.execute("SELECT * FROM view1")
             i = 0
             for student in cursor:
@@ -92,9 +92,28 @@ def signin():
                     e.grid(row=i, column=j)
                     e.insert(END, student[j])
                 i = i + 1
-                e = Label(root2, width=10, text=student[j],
+                e = Label(root2, width=35, text=student[j],
                           borderwidth=2, relief='ridge', anchor="w")
             root2.mainloop()
+
+        def showoutattendance():
+
+            conn = pyodbc.connect(
+                    'DRIVER=ODBC Driver 17 for SQL Server;Server=USER-PC;Database=attendance_db;Trusted_Connection=Yes;')
+            cursor = conn.cursor()
+            root2 = Tk()
+            root2.geometry("1280x800")
+            cursor.execute("SELECT * FROM view2")
+            i = 0
+            for student in cursor:
+                for j in range(len(student)):
+                    e = Entry(root2, width=10, fg='blue')
+                    e.grid(row=i, column=j)
+                    e.insert(END, student[j])
+                    i = i + 1
+                    e = Label(root2, width=35, text=student[j],
+                              borderwidth=2, relief='ridge', anchor="w")
+                root2.mainloop()
 
             '''
             sql = 
@@ -130,7 +149,7 @@ def signin():
                                                                                                                  y=630)
 
 
-        Button(screen, width=39, pady=7, text='Show Outtime Registry', bg='black', fg='white', border=0,
+        Button(screen, width=39, pady=7, text='Show Outtime Registry', bg='black', fg='white', border=0,command=showoutattendance
                ).place(x=100,
                                              y=690)
 
