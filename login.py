@@ -21,13 +21,77 @@ welcome_voice.say('WELCOME TO AUTOMATIC ATTENDANCE REGISTRATION SYSTEM')
 welcome_voice.runAndWait()
 
 '''
+def register():
+    rootreg = Tk()
+    rootreg.title('Sign Up')
+    rootreg.geometry('900x600')
+    rootreg.configure(bg="#E5C2C0")
+    rootreg.resizable(False, False)
+    heading1 = Label(rootreg, text='REGISTER NEW USER', fg='black', bg='#E5C2C0',
+                     font=('Candara', 24, 'bold'))
+    heading1.place(x=150, y=300)
+    frame = Frame(rootreg, width=350, height=400, bg="#E5C2C0")
+    frame.place(x=500, y=190)  # 480 and 70
+    heading = Label(frame, text='SIGN UP', fg='black', bg='#E5C2C0', font=('Candara', 22))
+    heading.place(x=100, y=0)
+    # -----------------------------------UserName---------------------------
+    uslabel = Label(frame, text='Create Username', fg='black', bg='#E5C2C0', font=('Candara', 13))
+    uslabel.place(x=30,y=55)
+    userreg = Entry(frame, width=25, fg='black', border=0, bg='#E5C2C0', font=('Microsoft YaHei UI Light', 11))
+    userreg.place(x=30, y=90)
+
+
+
+    Frame(frame, width=295, height=2, bg='black').place(x=25, y=107)
+
+    # ------------------------------------Password------------------------------
+
+    uslabel = Label(frame, text='Create Password', fg='black', bg='#E5C2C0', font=('Candara', 13))
+    uslabel.place(x=30, y=120)
+    passwordreg = Entry(frame, width=25, fg='black', border=0, bg='#E5C2C0', font=('Microsoft YaHei UI Light', 11))
+    passwordreg.place(x=30, y=150)
+
+
+
+    Frame(frame, width=295, height=2, bg='black').place(x=25, y=177)
+
+
+
+    def regins():
+        cusername = str(userreg.get())
+        cpass = str(passwordreg.get())
+        conn = pyodbc.connect(
+            'DRIVER=ODBC Driver 17 for SQL Server;Server=USER-PC;Database=attendance_db;Trusted_Connection=Yes;')
+        cursor = conn.cursor()
+        sql = '''insert into attendance_db.dbo.register(userregname,userpassword) values('%s','%s')''' % (cusername,cpass)
+
+        cursor.execute(sql)
+        conn.commit()
+        mb.showinfo('Signup','Registered Successfully')
+
+    Button(frame, width=39, pady=7, text='Register', bg='green', fg='white', border=0, command=regins).place(x=35,
+                                                                                                             y=204)
+
+
+    rootreg.mainloop()
+
+
+
 
 def signin():
 
-    username = user.get()
-    password3 = password.get()
-
-    if username == 'admin' and password3 == 'admin':
+    username = str(user.get())
+    password3 = str(password.get())
+    conn = pyodbc.connect(
+        'DRIVER=ODBC Driver 17 for SQL Server;Server=USER-PC;Database=attendance_db;Trusted_Connection=Yes;')
+    cursor = conn.cursor()
+    sql = "SELECT * FROM attendance_db.dbo.register WHERE userregname = '" + username + "' AND userpassword = '" + password3 + "'"
+    print(sql)
+    cursor.execute(sql)
+    rowcount = cursor.rowcount
+    print(rowcount)
+    conn.commit()
+    if cursor.rowcount == -1:
         welcome_voice = pyttsx3.init()
         welcome_voice.setProperty("rate", 130)
         welcome_voice.say('Login Sucessfull , Read the instructions in upcoming page')
@@ -35,26 +99,26 @@ def signin():
         screen = Toplevel(root)
         screen.title("Instructions")
         screen.geometry('1280x800')
-        screen.configure(bg="white")
-        img2 = PhotoImage(file='C:\\Users\\User\\Downloads\\instruction.png')
-        Label(screen, image=img2, bg="white").place(x=0, y=130)
-        heading2 = Label(screen, text='WELCOME TO AUTOMATIC ATTENDANCE REGISTRATION SYSTEM', fg='black',bg='white',
+        screen.configure(bg="#E5C2C0")
+        img2 = PhotoImage(file='C:\\Users\\User\\PycharmProject\\Mini_Project\\instruction.png')
+        Label(screen, image=img2, bg="#E5C2C0").place(x=0, y=110)
+        heading2 = Label(screen, text='WELCOME TO AUTOMATIC ATTENDANCE REGISTRATION SYSTEM', fg='black',bg="#E5C2C0",
                          font=('Candara', 22,'bold'))
-        heading2.place(x=243, y=50)
-        frame = Frame(screen, width=590, height=400, bg="white")
-        frame.place(x=640,y=180)
-        ins1 = Label(frame, text='1) Instruct the students to show their face infront of the webcam for one second', fg='black', bg='white',
+        heading2.place(x=243, y=20)
+        frame = Frame(screen, width=590, height=400, bg="#E5C2C0")
+        frame.place(x=640,y=140)
+        ins1 = Label(frame, text='1) Instruct the students to show their face infront of the webcam for one second', fg='black', bg="#E5C2C0",
                          font=('Candara', 13))
         ins1.place(x=0, y=10)
-        ins2 = Label(frame, text='2) Student face will be automatically detected',fg='black', bg='white', font=('Candara', 13))
+        ins2 = Label(frame, text='2) Student face will be automatically detected',fg='black', bg="#E5C2C0", font=('Candara', 13))
         ins2.place(x=0, y=60)
-        ins3 = Label(frame, text='3) Finally the attendance will be stored in your own database ', fg='black', bg='white',
+        ins3 = Label(frame, text='3) Finally the attendance will be stored in your own database ', fg='black', bg="#E5C2C0",
                      font=('Candara', 13))
         ins3.place(x=0, y=110)
         img3 = PhotoImage(file='C:\\Users\\User\\OneDrive\\Desktop\\Mini-Project\\Detectimg.png')
         Label(frame, image=img3, bg='#E5C2C0').place(x=0, y=160)
 
-        crctDate = datetime.datetime.now().date()
+
 
         def startfunc():
             cmd = 'python main.py'
@@ -136,33 +200,34 @@ def signin():
             exit()
 
         Button(screen, width=39, pady=7, text='Register Student Details', bg='black', fg='white', border=0, command=regfunc).place(x=900,
-                                                                                                                y=630)
+                                                                                                                y=590)
 
-        Button(screen, width=39, pady=7, text='Exit', bg='black', fg='white', border=0, command=exitfunc).place(x=900,
-                             y=690)
+        Button(screen, width=39, pady=7, text='Exit', bg='red', fg='white', border=0, command=exitfunc).place(x=900,
+                             y=650)
 
-        Button(screen, width=39, pady=7, text='Show Intime Registry', bg='black', fg='white', border=0,
+        Button(screen, width=39, pady=7, text='Show Intime Registry', bg='black', fg='white', borderwidth=0,
                    command=showattendance).place(x=100,
-                                            y=630)
+                                            y=590)
 
         Button(screen, width=39, pady=7, text='Start Intime Attendance', bg='black', fg='white', border=0,command=startfunc).place(x=470,
-                                                                                                                 y=630)
+                                                                                                                 y=590)
 
 
         Button(screen, width=39, pady=7, text='Show Outtime Registry', bg='black', fg='white', border=0,command=showoutattendance
                ).place(x=100,
-                                             y=690)
+                                             y=650)
 
         Button(screen, width=39, pady=7, text='Start Outtime Attendance', bg='black', fg='white', border=0,command=outfunc,
                ).place(x=470,
-                                        y=690)
+                                        y=650)
         screen.mainloop()
-    elif username != 'admin' and password3 != 'admin':
+
+    else:
         welcome_voice = pyttsx3.init()
         welcome_voice.setProperty("rate", 130)
-        welcome_voice.say('Invalid Username and Password')
+        welcome_voice.say('Invalid username and Password ')
         welcome_voice.runAndWait()
-        mb.showerror("Invalid", "Invalid Username and Password")
+        mb.showinfo('Invalid','Invalid Credentials')
 
 
 img = PhotoImage(file='C:\\Users\\User\\Downloads\\login.png')
@@ -181,52 +246,40 @@ heading.place(x=100, y=5)
 
 
 # -----------------------------------UserName---------------------------
-def enteron(e):
-    user.delete(0, 'end')
 
 
-def leaveon(e):
-    name = user.get()
-    if name == '':
-        user.insert(0, 'Username')
-
-
+uslabel = Label(frame, text='Username', fg='black', bg='#E5C2C0', font=('Candara', 13))
+uslabel.place(x=30,y=55)
 user = Entry(frame, width=25, fg='black', border=0, bg='#E5C2C0', font=('Microsoft YaHei UI Light', 11))
 user.place(x=30, y=80)
-user.insert(0, 'Username')
-user.bind('<FocusIn>', enteron)
-user.bind('<FocusOut>', leaveon)
+
+
 
 Frame(frame, width=295, height=2, bg='black').place(x=25, y=107)
 
 
 # ------------------------------------Password------------------------------
-def enteron(e):
-    password.delete(0, 'end')
-
-
-def leaveon(e):
-    password1 = password.get()
-    if password1 == '':
-        password.insert(0, 'Password')
 
 
 
+uslabel = Label(frame, text=' Password', fg='black', bg='#E5C2C0', font=('Candara', 13))
+uslabel.place(x=30, y=120)
 password = Entry(frame, width=25, fg='black', border=0, bg='#E5C2C0' ,font=('Microsoft YaHei UI Light', 11))
 password.place(x=30, y=150)
-password.insert(0, 'Password')
-password.bind('<FocusIn>', enteron)
-password.bind('<FocusOut>', leaveon)
+
 
 Frame(frame, width=295, height=2, bg='black').place(x=25, y=177)
 # ------------------------------------Submit---------------------------
-Button(frame, width=39, pady=7, text='Sign in', bg='black', fg='white', border=0, command=signin).place(x=35, y=204)
-label = Label(frame, text="Click to Sign In ", fg='black', bg='#E5C2C0', font=('Microsoft YaHei UI Light', 9))
-label.place(x=130, y=255)
+Button(frame, width=39, pady=7, text='Sign in', bg='green', fg='white', border=0, command=signin).place(x=35, y=204)
+label = Label(frame, text=" Register New User? Click Below !", fg='black', bg='#E5C2C0', font=('Microsoft YaHei UI Light', 9))
+label.place(x=70, y=255)
+
+Button(frame, width=39, pady=7, text='Sign up', bg='red', fg='white', border=0, command=register).place(x=35, y=295)
 
 
 
 root.mainloop()
+
 
 
 

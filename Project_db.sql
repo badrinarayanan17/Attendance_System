@@ -1,11 +1,18 @@
 create database attendance_db
 use attendance_db
+create table register(userregname varchar(100),userpassword varchar(100))
+drop table register
+select * from register
 
 create table mark_attendance(rollno int not null primary key,current_day varchar(100),InTime varchar(100),InDate date);
 drop table mark_attendance
 drop table personal_details
 
+select * from mark_attendance2
 select * from mark_attendance
+delete from mark_attendance where rollno=20219
+delete from mark_attendance where rollno=20239
+delete from mark_attendance where rollno=20243
 
 create table personal_details(rollno int not null primary key ,stud_name varchar(100) , department varchar(100),stud_year varchar(100));
 insert into personal_details values (20239,'Badri Narayanan', 'Computer Science' , 'III'),
@@ -39,7 +46,6 @@ where mark_attendance2.OutDate = CAST( GETDATE() AS Date
 
 create table mark_attendance2(rollno int not null primary key,current_day varchar(100),OutTime varchar(100),OutDate date);
 select * from mark_attendance2
-
 select * from view2
 select * from personal_details
 drop table mark_attendance2
